@@ -1,0 +1,82 @@
+{
+  "dishes": [
+    {
+      "id": 1,
+      "name": "Salade niçoise",
+      "description": "Salade composée avec thon, olives, œufs durs et anchois",
+      "price": 8.5
+    },
+    {
+      "id": 2,
+      "name": "Aïoli provençal",
+      "description": "Légumes vapeur, morue et sauce aïoli maison",
+      "price": 12
+    },
+    {
+      "id": 3,
+      "name": "Gratin dauphinois",
+      "description": "Gratin de pommes de terre à la crème et à l'ail",
+      "price": 9
+    },
+    {
+      "id": 4,
+      "name": "Bouillabaisse",
+      "description": "Soupe de poissons marseillaise avec rouille et croûtons",
+      "price": 15.5
+    },
+    {
+      "id": 5,
+      "name": "Tian de légumes",
+      "description": "Gratin de courgettes, tomates et aubergines au four",
+      "price": 7.5
+    },
+    {
+      "id": 6,
+      "name": "Poulet rôti",
+      "description": "Poulet fermier rôti aux herbes de Provence",
+      "price": 11
+    },
+    {
+      "id": 7,
+      "name": "Mousse au chocolat",
+      "description": "Mousse au chocolat noir 70%",
+      "price": 5
+    },
+    {
+      "id": 8,
+      "name": "Tarte tropézienne",
+      "description": "Brioche à la crème pâtissière vanillée",
+      "price": 5.5
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "lastName": "Dupont",
+      "firstName": "Marie",
+      "email": "marie.dupont@email.fr",
+      "address": "12 rue des Lilas, 13001 Marseille"
+    },
+    {
+      "id": 2,
+      "lastName": "Martin",
+      "firstName": "Jean",
+      "email": "jean.martin@email.fr",
+      "address": "3 avenue Foch, 13002 Marseille"
+    },
+    {
+      "id": 3,
+      "lastName": "Bernard",
+      "firstName": "Sophie",
+      "email": "sophie.bernard@email.fr",
+      "address": "7 avenue du Prado, 13008 Marseille"
+    },
+    {
+      "id": 4,
+      "lastName": "Leroux",
+      "firstName": "Paul",
+      "email": "paul.leroux@email.fr",
+      "address": "45 boulevard Michelet, 13009 Marseille"
+    }
+  ]
+}
