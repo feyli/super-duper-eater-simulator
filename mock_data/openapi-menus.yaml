@@ -1,0 +1,263 @@
+openapi: 3.0.3
+info:
+  title: Menus API
+  description: >
+    Management of menus composed by users from available dishes.
+    This component consumes the Dishes and Users API to validate dishes
+    and menu creators (without duplicating their data).
+    Consumed by the Orders component and the UI.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8081/menus/api
+    description: Local development server
+
+tags:
+  - name: Menus
+    description: CRUD operations on menus
+
+paths:
+
+  /menus:
+    get:
+      tags: [Menus]
+      summary: List all menus
+      operationId: getAllMenus
+      responses:
+        '200':
+          description: List of menus
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Menu'
+              example:
+                - id: 1
+                  name: "Menu Provence"
+                  creatorId: 2
+                  creatorName: "Martin"
+                  creationDate: "2025-03-10"
+                  updateDate: "2025-03-12"
+                  dishes:
+                    - id: 1
+                      name: "Salade niçoise"
+                      price: 8.50
+                    - id: 3
+                      name: "Gratin dauphinois"
+                      price: 9.00
+                  totalPrice: 17.50
+
+    post:
+      tags: [Menus]
+      summary: Create a new menu
+      operationId: createMenu
+      description: >
+        Creates an empty menu. Dishes can be added afterwards via
+        PUT /menus/{id}/dishes/{dishId}.
+        The component calls the Dishes and Users API to verify
+        that the creator exists.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuInput'
+            example:
+              name: "Menu Soleil"
+              creatorId: 2
+      responses:
+        '201':
+          description: Menu created
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /menus/2
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Menu'
+        '400':
+          description: Invalid data
+        '404':
+          description: Creator not found (verified via Dishes and Users API)
+
+  /menus/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+
+    get:
+      tags: [Menus]
+      summary: Get a menu by its ID
+      operationId: getMenuById
+      responses:
+        '200':
+          description: Menu found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Menu'
+        '404':
+          description: Menu not found
+
+    put:
+      tags: [Menus]
+      summary: Rename a menu (update its metadata)
+      operationId: updateMenu
+      description: >
+        Updates the menu name. The update date is calculated
+        automatically on the server side.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuInput'
+      responses:
+        '200':
+          description: Menu updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Menu'
+        '404':
+          description: Menu not found
+
+    delete:
+      tags: [Menus]
+      summary: Delete a menu
+      operationId: deleteMenu
+      responses:
+        '204':
+          description: Menu deleted
+        '404':
+          description: Menu not found
+
+  /menus/{id}/dishes/{dishId}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+      - name: dishId
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+
+    put:
+      tags: [Menus]
+      summary: Add a dish to the menu
+      operationId: addDishToMenu
+      description: >
+        Adds the dish identified by dishId to the menu.
+        The component calls the Dishes and Users API to verify
+        that the dish exists before adding it.
+      responses:
+        '200':
+          description: Dish added, updated menu returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Menu'
+        '404':
+          description: Menu or dish not found
+        '409':
+          description: Dish already present in this menu
+
+    delete:
+      tags: [Menus]
+      summary: Remove a dish from the menu
+      operationId: removeDishFromMenu
+      responses:
+        '200':
+          description: Dish removed, updated menu returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Menu'
+        '404':
+          description: Menu not found or dish absent from the menu
+
+components:
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+
+  schemas:
+
+    DishSummary:
+      description: >
+        Lightweight representation of a dish, stored in the Menus DB.
+        Only the id is kept on the Menus side; name and price are retrieved
+        via the Dishes and Users API on demand (or cached).
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          readOnly: true
+          example: "Salade niçoise"
+        price:
+          type: number
+          format: double
+          readOnly: true
+          example: 8.50
+
+    Menu:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: "Menu Provence"
+        creatorId:
+          type: integer
+          description: ID of the subscribing creator (FK to Dishes and Users API)
+          example: 2
+        creatorName:
+          type: string
+          readOnly: true
+          description: Name retrieved via Dishes and Users API
+          example: "Martin"
+        creationDate:
+          type: string
+          format: date
+          readOnly: true
+          example: "2025-03-10"
+        updateDate:
+          type: string
+          format: date
+          readOnly: true
+          example: "2025-03-12"
+        dishes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishSummary'
+        totalPrice:
+          type: number
+          format: double
+          readOnly: true
+          description: Sum of dish prices, calculated on the server side
+          example: 17.50
+
+    MenuInput:
+      type: object
+      required: [name, creatorId]
+      properties:
+        name:
+          type: string
+          example: "Menu Soleil"
+        creatorId:
+          type: integer
+          example: 2

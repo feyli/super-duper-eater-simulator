@@ -1,0 +1,304 @@
+openapi: 3.0.3
+info:
+  title: Dishes and Users API
+  description: >
+    Management of dishes offered by the meal delivery company
+    and registered subscribers. Consumed by the Menus component and the UI.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/dishes-users/api
+    description: Local development server
+
+tags:
+  - name: Dishes
+    description: CRUD operations on dishes
+  - name: Users
+    description: CRUD operations on subscribers
+
+paths:
+
+  # ─── DISHES ──────────────────────────────────────────────────────────────────
+
+  /dishes:
+    get:
+      tags: [Dishes]
+      summary: List all dishes
+      operationId: getAllDishes
+      responses:
+        '200':
+          description: List of available dishes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dish'
+              example:
+                - id: 1
+                  name: "Salade niçoise"
+                  description: "Salade composée avec thon, olives, œufs durs et anchois"
+                  price: 8.50
+                - id: 2
+                  name: "Aïoli"
+                  description: "Plat provençal : légumes vapeur, morue et sauce aïoli"
+                  price: 12.00
+
+    post:
+      tags: [Dishes]
+      summary: Create a new dish
+      operationId: createDish
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishInput'
+            example:
+              name: "Gratin dauphinois"
+              description: "Gratin de pommes de terre à la crème et à l'ail"
+              price: 9.00
+      responses:
+        '201':
+          description: Dish created
+          headers:
+            Location:
+              description: URI of the created dish
+              schema:
+                type: string
+                example: /dishes/3
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '400':
+          description: Invalid data
+
+  /dishes/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+
+    get:
+      tags: [Dishes]
+      summary: Get a dish by its ID
+      operationId: getDishById
+      responses:
+        '200':
+          description: Dish found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '404':
+          description: Dish not found
+
+    put:
+      tags: [Dishes]
+      summary: Replace an existing dish
+      operationId: updateDish
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishInput'
+      responses:
+        '200':
+          description: Dish updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '400':
+          description: Invalid data
+        '404':
+          description: Dish not found
+
+    delete:
+      tags: [Dishes]
+      summary: Delete a dish
+      operationId: deleteDish
+      responses:
+        '204':
+          description: Dish deleted
+        '404':
+          description: Dish not found
+
+  # ─── USERS ───────────────────────────────────────────────────────────────────
+
+  /users:
+    get:
+      tags: [Users]
+      summary: List all subscribers
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: List of subscribers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+    post:
+      tags: [Users]
+      summary: Register a new subscriber
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+            example:
+              lastName: "Dupont"
+              firstName: "Marie"
+              email: "marie.dupont@email.fr"
+              address: "12 rue des Lilas, 13001 Marseille"
+      responses:
+        '201':
+          description: Subscriber created
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /users/1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid data
+        '409':
+          description: Email already used
+
+  /users/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+
+    get:
+      tags: [Users]
+      summary: Get a subscriber by their ID
+      operationId: getUserById
+      responses:
+        '200':
+          description: Subscriber found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Subscriber not found
+
+    put:
+      tags: [Users]
+      summary: Modify a subscriber's information
+      operationId: updateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '200':
+          description: Subscriber updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Subscriber not found
+
+    delete:
+      tags: [Users]
+      summary: Delete a subscriber
+      operationId: deleteUser
+      responses:
+        '204':
+          description: Subscriber deleted
+        '404':
+          description: Subscriber not found
+
+components:
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+
+  schemas:
+
+    Dish:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: "Salade niçoise"
+        description:
+          type: string
+          example: "Salade composée avec thon, olives, œufs durs et anchois"
+        price:
+          type: number
+          format: double
+          example: 8.50
+
+    DishInput:
+      type: object
+      required: [name, description, price]
+      properties:
+        name:
+          type: string
+          example: "Gratin dauphinois"
+        description:
+          type: string
+          example: "Gratin de pommes de terre à la crème et à l'ail"
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 9.00
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        lastName:
+          type: string
+          example: "Dupont"
+        firstName:
+          type: string
+          example: "Marie"
+        email:
+          type: string
+          format: email
+          example: "marie.dupont@email.fr"
+        address:
+          type: string
+          example: "12 rue des Lilas, 13001 Marseille"
+
+    UserInput:
+      type: object
+      required: [lastName, firstName, email, address]
+      properties:
+        lastName:
+          type: string
+        firstName:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          type: string
