@@ -19,7 +19,7 @@ import java.util.List;
  * REST resource for managing orders.
  * Implements all CRUD operations defined in the OpenAPI specification.
  */
-@Path("/orders")
+@Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrdersResource {

@@ -4,7 +4,7 @@ import fr.univamu.iut.orders.database.DatabaseManager;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
-@ApplicationPath("/api")
+@ApplicationPath("/")
 public class OrdersApplication extends Application {
     
     /**
