@@ -1,0 +1,30 @@
+/* CSS Variables */
+:root {
+    /* Background */
+    --l-bg-color: #CACACA;
+    --l-surface: #F0F0F0;
+
+    /* Text */
+    --l-text-primary: #002040;
+
+    /* Other */
+    --shadow-default: 5px 5px 15px 5px rgba(0, 0, 0, 0.5);
+    --radius-default: 5px;
+}
+
+/* Basic classes */
+body {
+    font-family: system-ui;
+    background-color: var(--l-bg-color);
+    color: var(--l-text-primary);
+}
+
+.container {
+    background: var(--l-surface);
+    box-shadow: var(--shadow-default);
+    border-radius: var(--radius-default);
+}
+
+.italic-desc {
+    font: italic 1em system-ui;
+}
