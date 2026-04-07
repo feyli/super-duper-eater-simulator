@@ -28,7 +28,6 @@ public class DatabaseManager {
     private DatabaseManager() {
         Dotenv dotenv = Dotenv.configure()
                 .directory("/")
-                .ignoreIfMissing()
                 .load();
         
         String host = dotenv.get("DATABASE_URL");
