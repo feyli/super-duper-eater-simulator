@@ -27,7 +27,7 @@ public class DatabaseManager {
      */
     private DatabaseManager() {
         Dotenv dotenv = Dotenv.configure()
-                .directory(".")
+                .directory("/")
                 .ignoreIfMissing()
                 .load();
         
@@ -37,8 +37,8 @@ public class DatabaseManager {
         this.username = dotenv.get("DATABASE_USERNAME");
         this.password = dotenv.get("DATABASE_PASSWORD");
         
-        // Build JDBC connection string
-        this.jdbcUrl = String.format("jdbc:mariadb://%s:%s/%s", host, port, database);
+        // Build JDBC connection string (disable SSL for compatibility)
+        this.jdbcUrl = String.format("jdbc:mariadb://%s:%s/%s?useSSL=false", host, port, database);
         
         // Load MariaDB driver
         try {
