@@ -21,7 +21,7 @@ public class DishesUsersApplication extends Application {
     private DishesUsersRepositoryInterface openDbConnection(){
         DishesUsersRepositoryMariadb db = null;
         try{
-            db = new DishesUsersRepositoryMariadb("jdbc:mariadb://mysql-dealtoniut.alwaysdata.net/dealtoniut_dishes_users_db", "dealtoniut_dishes_users","Kikouine.123");//System.getenv("DB_INFO"), System.getenv("DB_USER"), System.getenv("DB_PWD"));
+            db = new DishesUsersRepositoryMariadb(System.getenv("DB_INFO"), System.getenv("DB_USER"), System.getenv("DB_PWD"));
         } catch(Exception e){
             System.err.println(e.getMessage());
         }
