@@ -68,6 +68,22 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
     }
 
     @Override
+    public boolean createDish(int id, String name, String description, float price) {
+        String query = "INSERT INTO dishes (id, name, description, price) VALUES (?, ?, ?, ?)";
+        boolean created = false;
+       try(PreparedStatement ps = dbConnection.prepareStatement(query)) {
+           ps.setInt(1, id);
+           ps.setString(2, name);
+           ps.setString(3, description);
+           ps.setFloat(4, price);
+           created  = ps.execute();
+       } catch(SQLException e) {
+           throw new RuntimeException(e);
+       }
+       return created;
+    }
+
+    @Override
     public boolean updateDish(int id, String name, String description, float price) {
         String query = "UPDATE dishes SET name=?, description=?, price=? where id=?";
         int nbRowModified = 0;
@@ -81,6 +97,19 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
             throw new RuntimeException(e);
         }
         return (nbRowModified != 0);
+    }
+
+    @Override
+    public boolean deleteDish(int id) {
+        String query = "DELETE FROM dishes WHERE id=?";
+        boolean deleted = false;
+        try(PreparedStatement ps = dbConnection.prepareStatement(query)){
+            ps.setInt(1, id);
+            deleted = ps.execute();
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return deleted;
     }
 
     @Override
@@ -126,8 +155,25 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
     }
 
     @Override
+    public boolean createUser(int id, String lastName, String firstName, String email, String address) {
+        String query = "INSERT INTO dishes (id, lastName, firstName, email, address) VALUES (?, ?, ?, ?, ?)";
+        boolean created = false;
+        try(PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ps.setString(2, lastName);
+            ps.setString(3, firstName);
+            ps.setString(4, email);
+            ps.setString(5, address);
+            created  = ps.execute();
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return created;
+    }
+
+    @Override
     public boolean updateUser(int id, String lastName, String firstName, String email, String address) {
-        String query = "UPDATE dishes SET lastName=?, firstName=?, email=?, address=? where id=?";
+        String query = "UPDATE users SET lastName=?, firstName=?, email=?, address=? where id=?";
         int nbRowModified = 0;
         try (PreparedStatement ps = dbConnection.prepareStatement(query)){
             ps.setInt(1, id);
@@ -140,5 +186,18 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
             throw new RuntimeException(e);
         }
         return (nbRowModified != 0);
+    }
+
+    @Override
+    public boolean deleteUser(int id) {
+        String query = "DELETE FROM users WHERE id=?";
+        boolean deleted = false;
+        try(PreparedStatement ps = dbConnection.prepareStatement(query)){
+            ps.setInt(1, id);
+            deleted = ps.execute();
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return deleted;
     }
 }

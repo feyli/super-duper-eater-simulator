@@ -38,7 +38,15 @@ public class UsersServices {
         return result;
     }
 
+    public boolean createUser(int id, Users user){
+        return userRepo.createUser(id, user.getLastName(), user.getFirstName(), user.getEmail(), user.getAddress());
+    }
+
     public boolean updateUser(int id, Users user){
         return userRepo.updateUser(id, user.getLastName(), user.getFirstName(), user.getEmail(), user.getAddress());
+    }
+
+    public boolean deleteUser(int id){
+        return userRepo.deleteUser(id);
     }
 }

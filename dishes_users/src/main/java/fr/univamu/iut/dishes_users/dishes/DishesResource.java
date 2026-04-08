@@ -38,11 +38,33 @@ public class DishesResource {
     @PUT
     @Path("{id}")
     @Consumes("application/json")
+    public Response createDish(@PathParam("id") int id, Dishes dish){
+        if(!dishesServices.createDish(id, dish)){
+            throw new NotFoundException();
+        } else {
+            return Response.ok("created").build();
+        }
+    }
+
+    @PUT
+    @Path("{id}")
+    @Consumes("application/json")
     public Response updateDish(@PathParam("id") int id, Dishes dish){
         if(!dishesServices.updateDish(id, dish)){
             throw new NotFoundException();
         } else {
             return Response.ok("updated").build();
+        }
+    }
+
+    @PUT
+    @Path("{id}")
+    @Consumes("application/json")
+    public Response deleteDish(@PathParam("id") int id){
+        if(!dishesServices.deleteDish(id)){
+            throw new NotFoundException();
+        } else {
+            return Response.ok("deleted").build();
         }
     }
 }

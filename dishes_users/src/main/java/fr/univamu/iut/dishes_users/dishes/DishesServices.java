@@ -38,7 +38,15 @@ public class DishesServices {
         return result;
     }
 
+    public boolean createDish(int id, Dishes dish){
+        return dishRepo.createDish(id, dish.getName(), dish.getDescription(), dish.getPrice());
+    }
+
     public boolean updateDish(int id, Dishes dish){
         return dishRepo.updateDish(id, dish.getName(), dish.getDescription(), dish.getPrice());
+    }
+
+    public boolean deleteDish(int id){
+        return dishRepo.deleteDish(id);
     }
 }

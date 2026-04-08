@@ -38,11 +38,33 @@ public class UsersResource {
     @PUT
     @Path("{id}")
     @Consumes("application/json")
+    public Response createUser(@PathParam("id") int id, Users user){
+        if(!usersServices.createUser(id, user)){
+            throw new NotFoundException();
+        } else {
+            return Response.ok("created").build();
+        }
+    }
+
+    @PUT
+    @Path("{id}")
+    @Consumes("application/json")
     public Response updateUser(@PathParam("id") int id, Users user){
         if(!usersServices.updateUser(id, user)){
             throw new NotFoundException();
         } else {
             return Response.ok("updated").build();
+        }
+    }
+
+    @PUT
+    @Path("{id}")
+    @Consumes("application/json")
+    public Response deleteUser(@PathParam("id") int id){
+        if(!usersServices.deleteUser(id)){
+            throw new NotFoundException();
+        } else {
+            return Response.ok("deleted").build();
         }
     }
 }

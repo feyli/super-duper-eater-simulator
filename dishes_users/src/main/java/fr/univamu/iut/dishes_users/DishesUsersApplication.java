@@ -21,28 +21,12 @@ public class DishesUsersApplication extends Application {
     private DishesUsersRepositoryInterface openDbConnection(){
         DishesUsersRepositoryMariadb db = null;
         try{
-            db = new DishesUsersRepositoryMariadb(System.getenv("DB_INFO"), System.getenv("DB_USER"), System.getenv("DB_PWD"));
+            db = new DishesUsersRepositoryMariadb("jdbc:mariadb://mysql-dealtoniut.alwaysdata.net/dealtoniut_dishes_users_db", "dealtoniut_dishes_users","Kikouine.123");//System.getenv("DB_INFO"), System.getenv("DB_USER"), System.getenv("DB_PWD"));
         } catch(Exception e){
             System.err.println(e.getMessage());
         }
         return db;
     }
 
-    @Override
-    public Set<Object> getSingletons(){
-        Set<Object> set = new HashSet<>();
-        DishesServices dishesServices = null;
-        UsersServices usersService = null;
-        try{
-            DishesUsersRepositoryMariadb db = new DishesUsersRepositoryMariadb(System.getenv("DB_INFO"), System.getenv("DB_USER"), System.getenv("DB_PWD"));
-            dishesServices = new DishesServices(db);
-            usersService = new UsersServices(db);
-        } catch(Exception e){
-            System.err.println(e.getMessage());
-        }
-        set.add(new DishesResource(dishesServices));
-        set.add(new UsersResource(usersService));
-        return set;
-    }
     private void closeDbConnection(@Disposes DishesUsersRepositoryInterface dishRepo, DishesUsersRepositoryInterface userRepo){dishRepo.close(); userRepo.close();}
 }
