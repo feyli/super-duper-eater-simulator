@@ -1,4 +1,4 @@
-package fr.univamu.iut.menus;
+package fr.univamu.iut.menus.config;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
@@ -6,6 +6,8 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import io.github.cdimascio.dotenv.Dotenv;
+import fr.univamu.iut.menus.repository.MenuRepositoryInterface;
+import fr.univamu.iut.menus.repository.MenuRepositoryMariadb;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -152,3 +154,4 @@ public class MenuApplication extends Application {
         return value == null || value.trim().isEmpty();
     }
 }
+

@@ -1,12 +1,12 @@
-package fr.univamu.iut.menus;
+package fr.univamu.iut.menus.service;
 
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbConfig;
-import jakarta.json.bind.config.PropertyOrderStrategy;
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
+import fr.univamu.iut.menus.client.ExternalApiClient;
+import fr.univamu.iut.menus.model.Menu;
+import fr.univamu.iut.menus.repository.MenuRepositoryInterface;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,6 @@ public class MenuService {
         List<Menu> allMenus = menuRepo.getAllMenus();
         enrichMenus(allMenus);
 
-        // ...existing code...
         return buildMenusJson(allMenus);
     }
 
@@ -170,3 +169,4 @@ public class MenuService {
                 .toString();
     }
 }
+

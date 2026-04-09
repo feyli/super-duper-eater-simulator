@@ -1,5 +1,6 @@
-package fr.univamu.iut.menus;
+package fr.univamu.iut.menus.repository;
 
+import fr.univamu.iut.menus.model.Menu;
 import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
@@ -172,3 +173,4 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return dish.getId();
     }
 }
+

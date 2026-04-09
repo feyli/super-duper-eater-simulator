@@ -1,10 +1,13 @@
-package fr.univamu.iut.menus;
+package fr.univamu.iut.menus.rest;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import fr.univamu.iut.menus.model.Menu;
+import fr.univamu.iut.menus.repository.MenuRepositoryInterface;
+import fr.univamu.iut.menus.service.MenuService;
 import java.util.Objects;
 
 /**
@@ -87,3 +90,4 @@ public class MenuResource {
             return Response.ok("updated").build();
     }
 }
+

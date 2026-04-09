@@ -1,4 +1,4 @@
-package fr.univamu.iut.menus;
+package fr.univamu.iut.menus.model;
 
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import java.math.BigDecimal;
@@ -230,3 +230,4 @@ public class Menu {
         }
     }
 }
+

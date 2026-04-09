@@ -1,5 +1,6 @@
-package fr.univamu.iut.menus;
+package fr.univamu.iut.menus.repository;
 
+import fr.univamu.iut.menus.model.Menu;
 import java.sql.Date;
 import java.util.List;
 
@@ -37,3 +38,4 @@ public interface MenuRepositoryInterface {
      */
     boolean updateMenu(Integer id, String name, Integer creatorId, Date updateDate, List<Menu.DishSummary> dishes);
 }
+

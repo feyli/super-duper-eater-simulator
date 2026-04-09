@@ -1,0 +1,155 @@
+@startuml Architecture_Menus
+
+skinparam packageBackgroundColor<<config>> #B0C4DE
+skinparam packageBackgroundColor<<model>> #DDA0DD
+skinparam packageBackgroundColor<<repository>> #FFD700
+skinparam packageBackgroundColor<<client>> #F0E68C
+skinparam packageBackgroundColor<<service>> #90EE90
+skinparam packageBackgroundColor<<rest>> #FFB6C1
+
+title Architecture de mon API Menus
+
+package config <<config>> {
+    class MenuApplication {
+        +openDbConnection(): MenuRepositoryInterface
+        -closeDbConnection(MenuRepositoryInterface): void
+        -getConfigValue(List, Map, String): String
+        -loadClasspathDotenv(): Map
+        -loadDotenvCandidates(): List
+        -unquote(String): String
+        -isBlank(String): boolean
+    }
+}
+
+package model <<model>> {
+    class Menu {
+        #id: Integer
+        #name: String
+        #creatorId: Integer
+        #creatorName: String
+        #creationDate: Date
+        #updateDate: Date
+        #dishes: ArrayList<DishSummary>
+        #totalPrice: BigDecimal
+        +getId(): Integer
+        +setId(Integer): void
+        +getName(): String
+        +setName(String): void
+        +getCreatorId(): Integer
+        +setCreatorId(Integer): void
+        +getCreatorName(): String
+        +setCreatorName(String): void
+        +getDishes(): ArrayList<DishSummary>
+        +setDishes(ArrayList): void
+        +getTotalPrice(): BigDecimal
+        +setTotalPrice(BigDecimal): void
+        +recomputeTotalPrice(): void
+        +toString(): String
+    }
+
+    class DishSummary {
+        #id: Integer
+        #name: String
+        #price: BigDecimal
+        +getId(): Integer
+        +setId(Integer): void
+        +getName(): String
+        +setName(String): void
+        +getPrice(): BigDecimal
+        +setPrice(BigDecimal): void
+        +toString(): String
+    }
+
+    Menu *-- DishSummary : contient
+}
+
+package repository <<repository>> {
+    interface MenuRepositoryInterface {
+        +close(): void
+        +getMenu(Integer): Menu
+        +getAllMenus(): List<Menu>
+        +updateMenu(Integer, String, Integer, Date, List): boolean
+    }
+
+    class MenuRepositoryMariadb {
+        #dbConnection: Connection
+        +MenuRepositoryMariadb(String, String, String)
+        +close(): void
+        +getMenu(Integer): Menu
+        +getAllMenus(): List<Menu>
+        +updateMenu(Integer, String, Integer, Date, List): boolean
+        -getMenuDishes(Integer): ArrayList<DishSummary>
+        -extractDishId(DishSummary): Integer
+    }
+
+    MenuRepositoryMariadb ..|> MenuRepositoryInterface
+}
+
+package client <<client>> {
+    class ExternalApiClient {
+        -USERS_URL: String
+        -DISHES_URL: String
+        -httpClient: HttpClient
+        +ExternalApiClient()
+        +fetchUserNamesById(): Map<Integer, String>
+        +fetchDishesById(): Map<Integer, DishData>
+        -fetchArray(String, String): JsonArray
+        -readInt(JsonObject, String): Integer
+        -readString(JsonObject, String): String
+        -readDecimal(JsonObject, String): BigDecimal
+    }
+
+    class DishData {
+        -name: String
+        -price: BigDecimal
+        +DishData(String, BigDecimal)
+        +getName(): String
+        +getPrice(): BigDecimal
+    }
+
+    ExternalApiClient *-- DishData
+}
+
+package service <<service>> {
+    class MenuService {
+        #menuRepo: MenuRepositoryInterface
+        #externalApiClient: ExternalApiClient
+        +MenuService(MenuRepositoryInterface)
+        +MenuService(MenuRepositoryInterface, ExternalApiClient)
+        +getAllMenusJSON(): String
+        +getMenuJSON(Integer): String
+        +updateMenu(Integer, Menu): boolean
+        -enrichMenus(List<Menu>): void
+        -enrichMenu(Menu, Map, Map): void
+        -buildMenusJson(List<Menu>): String
+    }
+
+    class MenusResponse {
+        -menus: List<Menu>
+        +MenusResponse(List<Menu>)
+        +getMenus(): List<Menu>
+    }
+
+    MenuService *-- MenusResponse
+}
+
+package rest <<rest>> {
+    class MenuResource {
+        -service: MenuService
+        -menuRepo: MenuRepositoryInterface
+        +MenuResource()
+        +MenuResource(MenuService)
+        +init(): void
+        +getAllMenus(): String
+        +getMenu(Integer): String
+        +updateMenu(Integer, Menu): Response
+    }
+}
+
+MenuApplication ..> MenuRepositoryInterface : produit
+MenuResource --> MenuService
+MenuResource --> MenuRepositoryInterface : injecte
+MenuService --> MenuRepositoryInterface
+MenuService --> ExternalApiClient
+
+@enduml
