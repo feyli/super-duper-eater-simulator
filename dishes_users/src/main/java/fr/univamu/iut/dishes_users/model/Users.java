@@ -1,4 +1,4 @@
-package fr.univamu.iut.dishes_users.users;
+package fr.univamu.iut.dishes_users.model;
 /**
  * Class representing a user
  */
@@ -52,14 +52,14 @@ public class Users {
         return id;
     }
     /**
-     * Method to get user lastname
+     * Method to get user last name
      * @return string lastName
      */
     public String getLastName() {
         return lastName;
     }
     /**
-     * Method to get user firstname
+     * Method to get user first name
      * @return string firstName
      */
     public String getFirstName() {
@@ -87,14 +87,14 @@ public class Users {
         this.id = id;
     }
     /**
-     * Method to set user lastname
+     * Method to set user last name
      * @param lastName user lastName
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
     /**
-     * Method to set user firstname
+     * Method to set user first name
      * @param firstName user firstName
      */
     public void setFirstName(String firstName) {

@@ -1,22 +1,38 @@
-package fr.univamu.iut.dishes_users;
+package fr.univamu.iut.dishes_users.repository;
 
-import fr.univamu.iut.dishes_users.dishes.Dishes;
-import fr.univamu.iut.dishes_users.users.Users;
-
+import fr.univamu.iut.dishes_users.model.Dishes;
+import fr.univamu.iut.dishes_users.model.Users;
 import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * MariaDB implementation of the dishes and users repository
+ */
 public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterface, Closeable {
 
+    /**
+     * Database connection
+     */
     protected Connection dbConnection;
 
+    /**
+     * Constructor for MariaDB repository
+     * @param connectionInfo database connection string
+     * @param user database username
+     * @param pwd database password
+     * @throws SQLException if connection fails
+     * @throws ClassNotFoundException if MariaDB driver not found
+     */
     public DishesUsersRepositoryMariadb(String connectionInfo, String user, String pwd) throws java.sql.SQLException, java.lang.ClassNotFoundException {
         Class.forName("org.mariadb.jdbc.Driver");
         dbConnection = DriverManager.getConnection(connectionInfo, user, pwd);
     }
 
+    /**
+     * Closes the database connection
+     */
     @Override
     public void close() {
         try{
@@ -27,6 +43,11 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         }
     }
 
+    /**
+     * Gets a dish by its ID
+     * @param id dish ID
+     * @return Dishes object or null if not found
+     */
     @Override
     public Dishes getDish(int id) {
         Dishes selectedDish = null;
@@ -46,6 +67,10 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return selectedDish;
     }
 
+    /**
+     * Gets all dishes
+     * @return List of all dishes
+     */
     @Override
     public List<Dishes> getAllDishes() {
         ArrayList<Dishes> selectedDishes;
@@ -67,6 +92,14 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return selectedDishes;
     }
 
+    /**
+     * Creates a new dish
+     * @param id dish ID
+     * @param name dish name
+     * @param description dish description
+     * @param price dish price
+     * @return true if created successfully, false otherwise
+     */
     @Override
     public boolean createDish(int id, String name, String description, float price) {
         String query = "INSERT INTO dishes (id, name, description, price) VALUES (?, ?, ?, ?)";
@@ -83,6 +116,14 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
        return created;
     }
 
+    /**
+     * Updates an existing dish
+     * @param id dish ID
+     * @param name dish name
+     * @param description dish description
+     * @param price dish price
+     * @return true if updated successfully, false otherwise
+     */
     @Override
     public boolean updateDish(int id, String name, String description, float price) {
         String query = "UPDATE dishes SET name=?, description=?, price=? where id=?";
@@ -99,6 +140,11 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return (nbRowModified != 0);
     }
 
+    /**
+     * Deletes a dish by its ID
+     * @param id dish ID
+     * @return true if deleted successfully, false otherwise
+     */
     @Override
     public boolean deleteDish(int id) {
         String query = "DELETE FROM dishes WHERE id=?";
@@ -112,6 +158,11 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return deleted;
     }
 
+    /**
+     * Gets a user by its ID
+     * @param id user ID
+     * @return Users object or null if not found
+     */
     @Override
     public Users getUser(int id) {
         Users selectedUser = null;
@@ -132,6 +183,10 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return selectedUser;
     }
 
+    /**
+     * Gets all users
+     * @return List of all users
+     */
     @Override
     public List<Users> getAllUsers() {
         ArrayList<Users> selectedUsers;
@@ -154,6 +209,15 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return selectedUsers;
     }
 
+    /**
+     * Creates a new user
+     * @param id user ID
+     * @param lastName user last name
+     * @param firstName user first name
+     * @param email user email
+     * @param address user address
+     * @return true if created successfully, false otherwise
+     */
     @Override
     public boolean createUser(int id, String lastName, String firstName, String email, String address) {
         String query = "INSERT INTO dishes (id, lastName, firstName, email, address) VALUES (?, ?, ?, ?, ?)";
@@ -171,6 +235,15 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return created;
     }
 
+    /**
+     * Updates an existing user
+     * @param id user ID
+     * @param lastName user last name
+     * @param firstName user first name
+     * @param email user email
+     * @param address user address
+     * @return true if updated successfully, false otherwise
+     */
     @Override
     public boolean updateUser(int id, String lastName, String firstName, String email, String address) {
         String query = "UPDATE users SET lastName=?, firstName=?, email=?, address=? where id=?";
@@ -188,6 +261,11 @@ public class DishesUsersRepositoryMariadb implements DishesUsersRepositoryInterf
         return (nbRowModified != 0);
     }
 
+    /**
+     * Deletes a user by its ID
+     * @param id user ID
+     * @return true if deleted successfully, false otherwise
+     */
     @Override
     public boolean deleteUser(int id) {
         String query = "DELETE FROM users WHERE id=?";

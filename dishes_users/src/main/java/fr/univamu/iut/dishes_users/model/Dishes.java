@@ -1,4 +1,4 @@
-package fr.univamu.iut.dishes_users.dishes;
+package fr.univamu.iut.dishes_users.model;
 /**
  * Class representing a dish
  */

@@ -1,23 +1,50 @@
-package fr.univamu.iut.dishes_users.dishes;
+package fr.univamu.iut.dishes_users.resource;
 
-import fr.univamu.iut.dishes_users.DishesUsersRepositoryInterface;
+import fr.univamu.iut.dishes_users.service.DishesServices;
+import fr.univamu.iut.dishes_users.repository.DishesUsersRepositoryInterface;
+import fr.univamu.iut.dishes_users.model.Dishes;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * REST resource for dish operations
+ */
 @Path("/dishes")
 @ApplicationScoped
 public class DishesResource {
 
+    /**
+     * Services for dish operations
+     */
     private DishesServices dishesServices;
 
+    /**
+     * Default constructor
+     */
     public DishesResource(){}
 
-    public @Inject DishesResource(DishesUsersRepositoryInterface dishRepo){this.dishesServices = new DishesServices(dishRepo);}
+    /**
+     * Constructor with dependency injection
+     * @param dishRepo repository interface for dishes
+     */
+    @Inject
+    public DishesResource(DishesUsersRepositoryInterface dishRepo){
+        this.dishesServices = new DishesServices(dishRepo);
+    }
 
+    /**
+     * Alternative constructor
+     * @param dishesServices dishes services instance
+     */
     public DishesResource(DishesServices dishesServices){this.dishesServices = dishesServices;}
 
+    /**
+     * Gets a dish by its ID
+     * @param id dish ID
+     * @return JSON response with the dish or 404 if not found
+     */
     @GET
     @Path("{id}")
     @Produces("application/json")
@@ -29,12 +56,22 @@ public class DishesResource {
         return result;
     }
 
+    /**
+     * Gets all dishes
+     * @return JSON response with all dishes
+     */
     @GET
     @Produces("application/json")
     public String getAllDishes(){
         return dishesServices.getAllDishesJSON();
     }
 
+    /**
+     * Creates a new dish
+     * @param id dish ID
+     * @param dish dish object from request body
+     * @return Response indicating success or failure
+     */
     @PUT
     @Path("{id}")
     @Consumes("application/json")
@@ -46,6 +83,12 @@ public class DishesResource {
         }
     }
 
+    /**
+     * Updates an existing dish
+     * @param id dish ID
+     * @param dish dish object from request body
+     * @return Response indicating success or failure
+     */
     @PUT
     @Path("{id}")
     @Consumes("application/json")
@@ -57,6 +100,11 @@ public class DishesResource {
         }
     }
 
+    /**
+     * Deletes a dish by its ID
+     * @param id dish ID
+     * @return Response indicating success or failure
+     */
     @PUT
     @Path("{id}")
     @Consumes("application/json")
